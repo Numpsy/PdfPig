@@ -22,10 +22,12 @@ namespace UglyToad.PdfPig.Graphics
     using Tokens;
     using Operations.PathPainting;
 
-    internal class ReflectionGraphicsStateOperationFactory : IGraphicsStateOperationFactory
+    // @@NOTE@@ This is a partial class so that GraphicsStateOperations can generate additional properties for it.
+    internal partial class ReflectionGraphicsStateOperationFactory : IGraphicsStateOperationFactory
     {
         private static readonly ListPool<double> DoubleListPool = new ListPool<double>(10);
 
+#if false
         private readonly IReadOnlyDictionary<string, Type> operations;
 
         public ReflectionGraphicsStateOperationFactory()
@@ -33,7 +35,7 @@ namespace UglyToad.PdfPig.Graphics
             var assemblyTypes = Assembly.GetAssembly(typeof(ReflectionGraphicsStateOperationFactory))!.GetTypes();
 
             var result = new Dictionary<string, Type>();
-
+            
             foreach (var assemblyType in assemblyTypes)
             {
                 if (!assemblyType.IsInterface && typeof(IGraphicsStateOperation).IsAssignableFrom(assemblyType))
@@ -53,6 +55,7 @@ namespace UglyToad.PdfPig.Graphics
 
             operations = result;
         }
+#endif
 
         private static double[] TokensToDoubleArray(IReadOnlyList<IToken> tokens, bool exceptLast = false)
         {
